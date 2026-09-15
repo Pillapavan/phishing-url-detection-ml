@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables / secrets
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+
+# ML artifacts
+artifacts/
+models/
+
+# Temporary files
+*.tmp
+*.temp
