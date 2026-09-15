@@ -36,6 +36,7 @@ setup(
     author="Pavan",
     author_email="pillapavan90909@gmail.com",
     description="End-to-end machine learning project for phishing URL detection",
-    packages=find_packages(),
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     install_requires=get_requirements()
 )

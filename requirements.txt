@@ -6,3 +6,5 @@ uvicorn
 mlflow
 pymongo
 pymongo[srv]
+dotenv
+certifi

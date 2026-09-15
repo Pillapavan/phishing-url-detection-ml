@@ -25,9 +25,9 @@ class CustomException(Exception):
         return self.error_message
 
 
-try:
-    x = 10 / 0
+# try:
+#     x = 10 / 0
 
-except Exception as e:
-    raise CustomException(e, sys)
+# except Exception as e:
+#     raise CustomException(e, sys)
     
