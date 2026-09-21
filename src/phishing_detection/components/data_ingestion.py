@@ -130,27 +130,3 @@ class DataIngestion:
 
         except Exception as e:
             raise CustomException(e, sys)    
-      
-
-        
-
-if __name__ == "__main__":
-
-    training_pipeline_config = TrainingPipelineConfig()
-
-    data_ingestion_config = DataIngestionConfig(
-        training_pipeline_config
-    )
-
-    data_ingestion = DataIngestion(
-        data_ingestion_config
-    )
-
-    artifact = data_ingestion.initiate_data_ingestion()
-
-    print("\nData Ingestion Completed!")
-    print("Training file:")
-    print(artifact.trained_file_path)
-
-    print("\nTesting file:")
-    print(artifact.test_file_path)
