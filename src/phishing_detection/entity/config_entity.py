@@ -100,4 +100,57 @@ class DataValidationConfig:
             "config",
             training_pipeline.DATA_VALIDATION_SCHEMA_FILE_NAME
         )
-        
+
+        self.missing_value_threshold = (
+            training_pipeline.DATA_VALIDATION_MISSING_VALUE_THRESHOLD
+        )
+
+class DataAnalysisConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig):
+
+        self.data_analysis_dir = os.path.join(
+            training_pipeline_config.artifact_dir,
+            training_pipeline.DATA_ANALYSIS_DIR_NAME
+        )
+
+        self.analysis_report_file_path = os.path.join(
+            self.data_analysis_dir,
+            training_pipeline.DATA_ANALYSIS_REPORT_FILE_NAME
+        )
+
+        self.imbalance_threshold = (
+            training_pipeline.DATA_ANALYSIS_IMBALANCE_THRESHOLD
+        )
+
+
+class DataTransformationConfig:
+
+    def __init__(
+        self,
+        training_pipeline_config: TrainingPipelineConfig
+    ):
+
+        self.data_transformation_dir = os.path.join(
+            training_pipeline_config.artifact_dir,
+            training_pipeline.DATA_TRANSFORMATION_DIR_NAME
+        )
+
+        self.transformed_dir = os.path.join(
+            self.data_transformation_dir,
+            training_pipeline.DATA_TRANSFORMATION_TRANSFORMED_DIR
+        )
+
+        self.transformed_train_file_path = os.path.join(
+            self.transformed_dir,
+            training_pipeline.DATA_TRANSFORMATION_TRAIN_FILE_NAME
+        )
+
+        self.transformed_test_file_path = os.path.join(
+            self.transformed_dir,
+            training_pipeline.DATA_TRANSFORMATION_TEST_FILE_NAME
+        )
+
+        self.processor_file_path = os.path.join(
+            self.data_transformation_dir,
+            training_pipeline.DATA_TRANSFORMATION_PROCESSOR_FILE_NAME
+        )

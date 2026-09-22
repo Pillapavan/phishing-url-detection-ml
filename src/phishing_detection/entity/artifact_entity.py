@@ -19,3 +19,16 @@ class DataValidationArtifact:
     invalid_test_file_path: str
 
     drift_report_file_path: str
+
+
+@dataclass
+class DataAnalysisArtifact:
+    is_imbalanced: bool
+    analysis_report_file_path: str
+
+@dataclass
+class DataTransformationArtifact:
+
+    transformed_train_file_path: str
+    transformed_test_file_path: str
+    processor_file_path: str

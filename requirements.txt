@@ -10,3 +10,4 @@ dotenv
 certifi
 PyYAML
 scipy
+imbalanced-learn

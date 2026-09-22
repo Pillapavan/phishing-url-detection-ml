@@ -87,12 +87,27 @@ class DataValidation:
         return True
 
 # validate missing values
-    def validate_missing_values(
-        self,
-        dataframe: pd.DataFrame
-        ) -> bool:
+    def validate_missing_values(self, dataframe):
+        missing_percentage = dataframe.isnull().mean()
 
-        return not dataframe.isnull().values.any()
+        columns_exceeding_threshold = missing_percentage[
+            missing_percentage > self.data_validation_config.missing_value_threshold
+        ]
+
+        if not columns_exceeding_threshold.empty:
+            logging.error(
+                f"Columns exceeding missing value threshold: "
+                f"{columns_exceeding_threshold.to_dict()}"
+            )
+            return False
+        
+        # Target column must never contain missing values
+        if dataframe["Result"].isnull().any():
+            logging.error("Target column 'Result' contains missing values.")
+            return False
+
+
+        return True
 
 
 # validating target column
