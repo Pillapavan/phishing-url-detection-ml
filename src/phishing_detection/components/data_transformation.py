@@ -60,6 +60,17 @@ class DataTransformation:
         X_test = test_df.drop(columns=[target_column])
         y_test = test_df[target_column]
 
+        # Convert target labels from {-1, 1} to {0, 1}
+        y_train = y_train.map({
+            -1: 0,
+             1: 1
+        })
+
+        y_test = y_test.map({
+            -1: 0,
+            1: 1
+        })
+
         return X_train, y_train, X_test, y_test
 
     def create_processor(self):

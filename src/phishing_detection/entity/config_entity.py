@@ -154,3 +154,54 @@ class DataTransformationConfig:
             self.data_transformation_dir,
             training_pipeline.DATA_TRANSFORMATION_PROCESSOR_FILE_NAME
         )
+
+
+class ModelTrainerConfig:
+
+    def __init__(
+        self,
+        training_pipeline_config: TrainingPipelineConfig
+    ):
+
+        self.model_trainer_dir = os.path.join(
+            training_pipeline_config.artifact_dir,
+            training_pipeline.MODEL_TRAINER_DIR_NAME
+        )
+
+        self.trained_model_dir = os.path.join(
+            self.model_trainer_dir,
+            training_pipeline.MODEL_TRAINER_TRAINED_MODEL_DIR
+        )
+
+        self.trained_model_file_path = os.path.join(
+            self.trained_model_dir,
+            training_pipeline.MODEL_TRAINER_TRAINED_MODEL_NAME
+        )
+
+
+class ModelEvaluationConfig:
+
+    def __init__(
+        self,
+        training_pipeline_config: TrainingPipelineConfig
+    ):
+
+        self.model_evaluation_dir = os.path.join(
+            training_pipeline_config.artifact_dir,
+            training_pipeline.MODEL_EVALUATION_DIR_NAME
+        )
+
+        self.evaluation_report_file_path = os.path.join(
+            self.model_evaluation_dir,
+            training_pipeline.MODEL_EVALUATION_REPORT_FILE_NAME
+        )
+
+        self.confusion_matrix_file_path = os.path.join(
+            self.model_evaluation_dir,
+            training_pipeline.MODEL_EVALUATION_CONFUSION_MATRIX_FILE_NAME
+        )
+
+        self.roc_curve_file_path = os.path.join(
+            self.model_evaluation_dir,
+            training_pipeline.MODEL_EVALUATION_ROC_CURVE_FILE_NAME
+        )

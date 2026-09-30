@@ -48,3 +48,22 @@ DATA_TRANSFORMATION_TRAIN_FILE_NAME = "train.npy"
 DATA_TRANSFORMATION_TEST_FILE_NAME = "test.npy"
 
 DATA_TRANSFORMATION_PROCESSOR_FILE_NAME = "processor.pkl"
+
+# Model training
+MODEL_TRAINER_DIR_NAME = "model_trainer"
+MODEL_TRAINER_TRAINED_MODEL_DIR = "trained_model"
+MODEL_TRAINER_TRAINED_MODEL_NAME = "model.pkl"
+
+
+# Model Evaluation
+MODEL_EVALUATION_DIR_NAME = "model_evaluation"
+
+MODEL_EVALUATION_REPORT_FILE_NAME = "evaluation_report.yaml"
+
+MODEL_EVALUATION_CONFUSION_MATRIX_FILE_NAME = (
+    "confusion_matrix.png"
+)
+
+MODEL_EVALUATION_ROC_CURVE_FILE_NAME = (
+    "roc_curve.png"
+)

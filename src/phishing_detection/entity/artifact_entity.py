@@ -32,3 +32,20 @@ class DataTransformationArtifact:
     transformed_train_file_path: str
     transformed_test_file_path: str
     processor_file_path: str
+
+@dataclass
+class ModelTrainerArtifact:
+    trained_model_file_path: str
+    best_model_name: str
+    best_model_parameters: dict
+    best_cv_score: float
+    train_metric_artifact: dict
+
+
+@dataclass
+class ModelEvaluationArtifact:
+
+    model_evaluation_status: bool
+    evaluation_report_file_path: str
+    confusion_matrix_file_path: str
+    roc_curve_file_path: str
