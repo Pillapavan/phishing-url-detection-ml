@@ -36,6 +36,8 @@ dist/
 # ML artifacts
 artifacts/
 models/
+mlflow.db
+mlruns/
 
 # Temporary files
 *.tmp

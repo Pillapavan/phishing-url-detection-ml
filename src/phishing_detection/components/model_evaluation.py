@@ -4,6 +4,8 @@ import pickle
 import logging
 import yaml
 import numpy as np
+import mlflow
+import mlflow.sklearn
 
 import matplotlib.pyplot as plt
 
@@ -263,63 +265,87 @@ class ModelEvaluation:
                 "Starting model evaluation"
             )
 
-            # 1. Load trained model
-            model = self.load_model()
+            mlflow.set_experiment("phishing_detection")
 
-            # 2. Load untouched test data
-            X_test, y_test = self.load_test_data()
+            with mlflow.start_run(run_name="final_model_evaluation"):
 
-            # 3. Predictions
-            predictions = self.predict(
-                model,
-                X_test
-            )
+                # 1. Load trained model
+                model = self.load_model()
 
-            # 4. Probabilities
-            probabilities = None
+                # 2. Load untouched test data
+                X_test, y_test = self.load_test_data()
 
-            if hasattr(model, "predict_proba"):
-
-                probabilities = model.predict_proba(
+                # 3. Predictions
+                predictions = self.predict(
+                    model,
                     X_test
-                )[:, 1]
+                )
 
-            # 5. Metrics
-            metrics = self.calculate_metrics(
-                y_test,
-                predictions,
-                probabilities
-            )
+                # 4. Probabilities
+                probabilities = None
 
-            # 6. Classification report
-            report = self.generate_classification_report(
-                y_test,
-                predictions
-            )
+                if hasattr(model, "predict_proba"):
 
-            # 7. Confusion matrix
-            self.generate_confusion_matrix(
-                y_test,
-                predictions
-            )
+                    probabilities = model.predict_proba(
+                        X_test
+                    )[:, 1]
 
-            # 8. ROC curve
-            if probabilities is not None:
-
-                self.generate_roc_curve(
+                # 5. Metrics
+                metrics = self.calculate_metrics(
                     y_test,
+                    predictions,
                     probabilities
                 )
 
-            # 9. Save report
-            self.save_evaluation_report(
-                metrics,
-                report
-            )
+                # 6. Classification report
+                report = self.generate_classification_report(
+                    y_test,
+                    predictions
+                )
 
-            logging.info(
-                f"Model evaluation completed: {metrics}"
-            )
+                # 7. Confusion matrix
+                self.generate_confusion_matrix(
+                    y_test,
+                    predictions
+                )
+
+                # 8. ROC curve
+                if probabilities is not None:
+
+                    self.generate_roc_curve(
+                        y_test,
+                        probabilities
+                    )
+
+                # 9. Save report
+                self.save_evaluation_report(
+                    metrics,
+                    report
+                )
+
+                # MLflow metrics
+                mlflow.log_metrics(metrics)
+
+                # MLflow artifacts
+                mlflow.log_artifact(
+                    self.model_evaluation_config.evaluation_report_file_path
+                )
+
+                mlflow.log_artifact(
+                    self.model_evaluation_config.confusion_matrix_file_path
+                )
+
+                mlflow.log_artifact(
+                    self.model_evaluation_config.roc_curve_file_path
+                )
+
+                logging.info(
+                    f"Model evaluation completed: {metrics}"
+                )
+                mlflow.sklearn.log_model(
+                        model,
+                        "model"
+                    )
 
             return ModelEvaluationArtifact(
                 model_evaluation_status=True,

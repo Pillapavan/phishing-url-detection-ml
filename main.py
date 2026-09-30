@@ -16,8 +16,23 @@ from phishing_detection.entity.config_entity import (
     ModelEvaluationConfig
 )
 
+import dagshub
+from dotenv import load_dotenv
+import os
+import mlflow
+
+load_dotenv()
+
+dagshub.init(
+    repo_owner=os.getenv("DAGSHUB_USERNAME"),
+    repo_name="phishing-url-detection-ml",
+    mlflow=True
+)
+
+mlflow.set_experiment("phishing_detection")
 
 def main():
+
 
     training_pipeline_config = TrainingPipelineConfig()
 
