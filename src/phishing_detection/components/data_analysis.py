@@ -2,6 +2,7 @@ import os
 from phishing_detection.utils.main_utils import write_yaml_file
 import pandas as pd
 from phishing_detection.entity.artifact_entity import DataAnalysisArtifact
+from phishing_detection.constants import training_pipeline
 
 
 
@@ -31,10 +32,10 @@ class DataAnalysis:
 
         missing_percentage = train_df.isnull().mean() * 100
 
-        target_distribution = train_df["Result"].value_counts()
+        target_distribution = train_df[training_pipeline.TARGET_COLUMN].value_counts()
 
         target_percentage = (
-            train_df["Result"]
+            train_df[training_pipeline.TARGET_COLUMN]
             .value_counts(normalize=True)
             .mul(100)
         )

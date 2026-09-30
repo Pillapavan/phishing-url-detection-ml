@@ -4,17 +4,30 @@ ARTIFACT_DIR = "artifacts"
 
 
 URL_FEATURE_COLUMNS = [
-    "having_IP_Address",
-    "URL_Length",
-    "Shortining_Service",
-    "having_At_Symbol",
-    "double_slash_redirecting",
-    "Prefix_Suffix",
-    "having_Sub_Domain",
-    "port",
-    "HTTPS_token"
+    "url_len",
+    "dom_len",
+    "is_ip",
+    "tld_len",
+    "subdom_cnt",
+    "letter_cnt",
+    "digit_cnt",
+    "special_cnt",
+    "eq_cnt",
+    "qm_cnt",
+    "amp_cnt",
+    "dot_cnt",
+    "dash_cnt",
+    "under_cnt",
+    "letter_ratio",
+    "digit_ratio",
+    "spec_ratio",
+    "is_https",
+    "slash_cnt",
+    "entropy",
+    "path_len",
+    "query_len"
 ]
-
+TARGET_COLUMN = "label"
 
 # Data Ingestion
 DATA_INGESTION_DIR_NAME = "data_ingestion"

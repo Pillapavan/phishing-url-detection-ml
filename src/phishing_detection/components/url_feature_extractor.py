@@ -1,3 +1,4 @@
+import math
 import re
 from urllib.parse import urlparse
 
@@ -6,125 +7,185 @@ class URLFeatureExtractor:
 
     def __init__(self):
         self.feature_names = [
-            "having_IP_Address",
-            "URL_Length",
-            "Shortining_Service",
-            "having_At_Symbol",
-            "double_slash_redirecting",
-            "Prefix_Suffix",
-            "having_Sub_Domain",
-            "port",
-            "HTTPS_token"
+            "url_len",
+            "dom_len",
+            "is_ip",
+            "tld_len",
+            "subdom_cnt",
+            "letter_cnt",
+            "digit_cnt",
+            "special_cnt",
+            "eq_cnt",
+            "qm_cnt",
+            "amp_cnt",
+            "dot_cnt",
+            "dash_cnt",
+            "under_cnt",
+            "letter_ratio",
+            "digit_ratio",
+            "spec_ratio",
+            "is_https",
+            "slash_cnt",
+            "entropy",
+            "path_len",
+            "query_len"
         ]
+
+    def calculate_entropy(self, value):
+        if not value:
+            return 0.0
+
+        frequency = {}
+
+        for char in value:
+            frequency[char] = frequency.get(char, 0) + 1
+
+        length = len(value)
+        entropy = 0.0
+
+        for count in frequency.values():
+            probability = count / length
+            entropy -= probability * math.log2(probability)
+
+        return entropy
 
     def extract_features(self, url: str):
 
-        parsed_url = urlparse(url)
-        hostname = parsed_url.hostname or ""
+        if not isinstance(url, str) or not url.strip():
+            raise ValueError("URL must be a non-empty string.")
 
-        # 1. IP Address
-        # Dataset encoding:
-        # -1 = phishing/suspicious
-        #  1 = legitimate
-        ip_pattern = (
-            r"^(?:\d{1,3}\.){3}\d{1,3}$"
+        url = url.strip()
+
+        # Add scheme temporarily when parsing URLs such as www.google.com
+        parsed_url = urlparse(
+            url if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", url)
+            else "http://" + url
         )
 
-        if re.match(ip_pattern, hostname):
-            having_ip_address = -1
+        hostname = parsed_url.hostname or ""
+
+        domain_parts = hostname.split(".")
+
+        if len(domain_parts) >= 2:
+            domain = ".".join(domain_parts[-2:])
         else:
-            having_ip_address = 1
+            domain = hostname
 
-        # 2. URL Length
-        if len(url) < 54:
-            url_length = 1
-        elif len(url) <= 75:
-            url_length = 0
+        dom_len = len(domain)
+
+        # -----------------------------
+        # URL length
+        # -----------------------------
+        url_len = len(url)
+
+        # -----------------------------
+        # Domain
+        # -----------------------------
+        dom_len = len(domain)
+
+        # -----------------------------
+        # IP detection
+        # -----------------------------
+        is_ip = 0
+
+        if re.match(
+            r"^(?:\d{1,3}\.){3}\d{1,3}$",
+            domain
+        ):
+            is_ip = 1
+
+        # -----------------------------
+        # TLD
+        # -----------------------------
+        tld = ""
+
+        if domain and "." in domain:
+            tld = domain.split(".")[-1]
+
+        tld_len = len(tld)
+
+        # -----------------------------
+        # Subdomain count
+        # -----------------------------
+        subdom_cnt = max(len(domain_parts) - 2, 0)
+
+        # -----------------------------
+        # Character counts
+        # -----------------------------
+        letter_cnt = sum(char.isalpha() for char in url)
+
+        digit_cnt = sum(char.isdigit() for char in url)
+
+        special_cnt = sum(
+            not char.isalnum()
+            for char in url
+        )
+
+        eq_cnt = url.count("=")
+        qm_cnt = url.count("?")
+        amp_cnt = url.count("&")
+        dot_cnt = url.count(".")
+        dash_cnt = url.count("-")
+        under_cnt = url.count("_")
+        slash_cnt = url.count("/")
+
+        # -----------------------------
+        # Ratios
+        # -----------------------------
+        if url_len > 0:
+            letter_ratio = letter_cnt / url_len
+            digit_ratio = digit_cnt / url_len
+            spec_ratio = special_cnt / url_len
         else:
-            url_length = -1
+            letter_ratio = 0.0
+            digit_ratio = 0.0
+            spec_ratio = 0.0
 
-        # 3. URL Shortening Service
-        shortening_services = [
-            "bit.ly",
-            "goo.gl",
-            "shorte.st",
-            "go2l.ink",
-            "x.co",
-            "ow.ly",
-            "t.co",
-            "tinyurl.com",
-            "tr.im",
-            "is.gd",
-            "cli.gs",
-            "yfrog.com",
-            "migre.me",
-            "tiny.cc",
-            "bit.do",
-            "adf.ly",
-            "bitly.com",
-            "cutt.ly",
-            "lnkd.in"
-        ]
+        # -----------------------------
+        # HTTPS
+        # -----------------------------
+        is_https = int(parsed_url.scheme.lower() == "https")
 
-        if any(service in hostname.lower() for service in shortening_services):
-            shortening_service = -1
-        else:
-            shortening_service = 1
+        # -----------------------------
+        # Entropy
+        # -----------------------------
+        entropy = self.calculate_entropy(url)
 
-        # 4. @ Symbol
-        if "@" in url:
-            having_at_symbol = -1
-        else:
-            having_at_symbol = 1
+        # -----------------------------
+        # Path / Query
+        # -----------------------------
+        path = parsed_url.path or ""
+        query = parsed_url.query or ""
 
-        # 5. Double slash redirecting
-        path = parsed_url.path
+        path_len = len(path)
+        query_len = len(query)
 
-        if "//" in path:
-            double_slash_redirecting = -1
-        else:
-            double_slash_redirecting = 1
-
-        # 6. Prefix / Suffix
-        if "-" in hostname:
-            prefix_suffix = -1
-        else:
-            prefix_suffix = 1
-
-        # 7. Subdomain
-        dot_count = hostname.count(".")
-
-        if dot_count <= 2:
-            having_sub_domain = 1
-        elif dot_count == 3:
-            having_sub_domain = 0
-        else:
-            having_sub_domain = -1
-
-        # 8. Port
-        if parsed_url.port is None:
-            port = 1
-        elif parsed_url.port in [80, 443]:
-            port = 1
-        else:
-            port = -1
-
-        # 9. HTTPS token inside domain
-        domain_without_scheme = hostname.lower()
-
-        if "https" in domain_without_scheme or "http" in domain_without_scheme:
-            https_token = -1
-        else:
-            https_token = 1
-
-        return {
-            "having_IP_Address": having_ip_address,
-            "URL_Length": url_length,
-            "Shortining_Service": shortening_service,
-            "having_At_Symbol": having_at_symbol,
-            "double_slash_redirecting": double_slash_redirecting,
-            "Prefix_Suffix": prefix_suffix,
-            "having_Sub_Domain": having_sub_domain,
-            "port": port,
-            "HTTPS_token": https_token
+        # -----------------------------
+        # Final feature dictionary
+        # -----------------------------
+        features = {
+            "url_len": url_len,
+            "dom_len": dom_len,
+            "is_ip": is_ip,
+            "tld_len": tld_len,
+            "subdom_cnt": subdom_cnt,
+            "letter_cnt": letter_cnt,
+            "digit_cnt": digit_cnt,
+            "special_cnt": special_cnt,
+            "eq_cnt": eq_cnt,
+            "qm_cnt": qm_cnt,
+            "amp_cnt": amp_cnt,
+            "dot_cnt": dot_cnt,
+            "dash_cnt": dash_cnt,
+            "under_cnt": under_cnt,
+            "letter_ratio": letter_ratio,
+            "digit_ratio": digit_ratio,
+            "spec_ratio": spec_ratio,
+            "is_https": is_https,
+            "slash_cnt": slash_cnt,
+            "entropy": entropy,
+            "path_len": path_len,
+            "query_len": query_len
         }
+
+        return features

@@ -56,24 +56,13 @@ class DataTransformation:
 
         feature_columns = training_pipeline.URL_FEATURE_COLUMNS
 
-        target_column = "Result"
+        target_column =  training_pipeline.TARGET_COLUMN
 
         X_train = train_df[feature_columns]
         y_train = train_df[target_column]
 
         X_test = test_df[feature_columns]
         y_test = test_df[target_column]
-
-        # Convert target labels from {-1, 1} to {0, 1}
-        y_train = y_train.map({
-            -1: 0,
-             1: 1
-        })
-
-        y_test = y_test.map({
-            -1: 0,
-            1: 1
-        })
 
         return X_train, y_train, X_test, y_test
 

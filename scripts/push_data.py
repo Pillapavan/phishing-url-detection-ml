@@ -47,7 +47,7 @@ class NetworkDataExtract():
 
 
 if __name__=='__main__':
-    FILE_PATH="data\phisingData.csv"
+    FILE_PATH="data/Dataset.csv"
     DATABASE = "phishing_detection"
     COLLECTION = "phishing_data"
     networkobj=NetworkDataExtract()
