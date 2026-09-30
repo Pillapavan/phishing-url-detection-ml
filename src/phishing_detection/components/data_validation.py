@@ -26,12 +26,12 @@ class DataValidation:
         self.data_ingestion_artifact = data_ingestion_artifact
         self.data_validation_config = data_validation_config
 
-# read schema yaml
+    # read schema yaml
     def read_schema_file(self) -> dict:
         schema = read_yaml_file(self.data_validation_config.schema_file_path)
         return schema
     
-# read train and test data
+    # read train and test data
     def read_data(self):
 
         train_df = pd.read_csv(
@@ -44,7 +44,7 @@ class DataValidation:
 
         return train_df, test_df
 
-# validate no of column
+    # validate no of column
     def validate_number_of_columns(
         self,
         dataframe: pd.DataFrame,
@@ -55,7 +55,7 @@ class DataValidation:
 
         return actual_number_of_columns == expected_number_of_columns
 
-# validate column name
+    # validate column name
     def validate_column_names(
         self,
         dataframe: pd.DataFrame,
@@ -67,7 +67,7 @@ class DataValidation:
         return actual_columns == expected_columns
 
 
-# validate dtype
+    # validate dtype
     def validate_column_datatypes(
         self,
         dataframe: pd.DataFrame,
@@ -86,7 +86,7 @@ class DataValidation:
 
         return True
 
-# validate missing values
+    # validate missing values
     def validate_missing_values(self, dataframe):
         missing_percentage = dataframe.isnull().mean()
 
@@ -110,7 +110,7 @@ class DataValidation:
         return True
 
 
-# validating target column
+    # validating target column
     def validate_target_column(
         self,
         dataframe: pd.DataFrame,
@@ -125,7 +125,7 @@ class DataValidation:
 
         return True
 
-# Data drift method
+    # Data drift method
     def detect_drift(
         self,
         train_df: pd.DataFrame,

@@ -16,6 +16,8 @@ from phishing_detection.entity.config_entity import (
     DataTransformationConfig
 )
 
+from phishing_detection.constants import training_pipeline
+
 from phishing_detection.exception.exception import CustomException
 from phishing_detection.logger.logger import logging
 import sys
@@ -52,12 +54,14 @@ class DataTransformation:
 
     def separate_features_target(self, train_df, test_df):
 
+        feature_columns = training_pipeline.URL_FEATURE_COLUMNS
+
         target_column = "Result"
 
-        X_train = train_df.drop(columns=[target_column])
+        X_train = train_df[feature_columns]
         y_train = train_df[target_column]
 
-        X_test = test_df.drop(columns=[target_column])
+        X_test = test_df[feature_columns]
         y_test = test_df[target_column]
 
         # Convert target labels from {-1, 1} to {0, 1}

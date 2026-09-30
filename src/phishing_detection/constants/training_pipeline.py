@@ -2,6 +2,20 @@
 PIPELINE_NAME = "phishing_detection"
 ARTIFACT_DIR = "artifacts"
 
+
+URL_FEATURE_COLUMNS = [
+    "having_IP_Address",
+    "URL_Length",
+    "Shortining_Service",
+    "having_At_Symbol",
+    "double_slash_redirecting",
+    "Prefix_Suffix",
+    "having_Sub_Domain",
+    "port",
+    "HTTPS_token"
+]
+
+
 # Data Ingestion
 DATA_INGESTION_DIR_NAME = "data_ingestion"
 
